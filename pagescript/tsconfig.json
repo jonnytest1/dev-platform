@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "module": "ESNext",
+        "noImplicitAny": true,
+        "inlineSourceMap": true,
+        //"rootDir": ".",
+        // "outFile": "../dist/preload.js",
+        "outDir": "../dist/pagescript",
+        "moduleResolution": "node",
+        "downlevelIteration": true,
+        "paths": {},
+        "lib": [
+            "DOM.Iterable",
+            "DOM",
+            "ESNext"
+        ]
+    },
+    /*"files": [
+        // "./loader.ts",
+        "./preload.ts",
+    ],*/
+    "include": [
+        "./**/*.ts",
+    ]
+}

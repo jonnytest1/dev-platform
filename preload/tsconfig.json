@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "module": "CommonJS",
+        "noImplicitAny": true,
+        //"inlineSourceMap": true,
+        "sourceMap": true,
+        // "sourceRoot": "../dist",
+        "strictNullChecks": true,
+        "inlineSources": true,
+        "rootDir": ".",
+        // "outFile": "../dist/preload.js",
+        "outDir": "../dist/preload",
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "target": "ESNext",
+    },
+    "include": [
+        "./**/*.ts"
+    ]
+}

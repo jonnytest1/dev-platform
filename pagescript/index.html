@@ -1,0 +1,72 @@
+<html>
+
+      <head>
+            <meta charset="UTF-8">
+            <meta http-equiv="X-UA-Compatible"
+                  content="IE=edge">
+            <meta name="viewport"
+                  content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet"
+                  href="../dist/index.css">
+            <title>Document</title>
+      </head>
+
+      <body>
+            <div class="focus-wrapper">
+                  <span id="focusSelector"></span><span>::focus </span><br>
+                  <span id="hoverSelector"></span><span>::hover </span>
+            </div>
+            scale:<input type="range"
+                   title="scale"
+                   id="scale"
+                   value="40"
+                   step="1"
+                   min="30"
+                   max="60">disable view scaling:<input type="checkbox"
+                   class="viewascaling"><button id="reloadAll">reload all ♻️</button><input id="url"
+                   placeholder="url">
+            mouse mirror: :<input type="checkbox"
+                   checked
+                   id="mousemirror">
+            <div class="frame-grid"
+                 style="display: flex;">
+
+                  <div class="template view">
+
+                        <div class="contrl"
+                             #ctrl
+                             title="{{url}}">
+                              <div class="description">
+                                    <span>{{name}}</span>
+                                    <span class="url"
+                                          #urldisplay>{{url}}</span>
+                              </div>
+                              <div class="icons">
+                                    <div onclick="{{reloadclick}}"
+                                         class="reload clickable">♻️</div>
+                                    <div onclick="{{inspectclick}}"
+                                         class="inspect clickable">🔍</div>
+                              </div>
+                        </div>
+                        <div class="wrapper"
+                             #wrapper>
+                              <webview #webview
+                                       class="webview"
+                                       nodeintegration
+                                       allowpopups
+                                       title="test"
+                                       preload="../dist/preload/frame-client.js"
+                                       width="{{width}}"
+                                       height="{{height}}"
+                                       src="{{url}}">
+                              </webview>
+                        </div>
+
+                  </div>
+            </div>
+
+            <script src="../dist/pagescript/pagescript/control.js"
+                    type="module"></script>
+      </body>
+
+</html>
