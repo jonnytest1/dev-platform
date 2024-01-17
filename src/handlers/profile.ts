@@ -3,6 +3,7 @@ import { getCfg, setCfg } from '../util/data'
 import { sendMessage } from '../../preload/cross-ready/communication'
 import { Frame } from '../frame'
 import { FrameCentral } from '../frame-central'
+import { defaultProfile } from './default-profile'
 
 export async function registerProfileMenu(mainWindow: BrowserWindow, fc: FrameCentral) {
     const appMenu = Menu.getApplicationMenu()
@@ -62,26 +63,5 @@ export async function registerProfileMenu(mainWindow: BrowserWindow, fc: FrameCe
 }
 
 async function getProfiles() {
-    return (await getCfg("profiles")) ?? {
-        profiles: {
-            default: {
-                displays: [{
-                    name: "PC",
-                    width: 1920,
-                    height: 1080
-                }, {
-                    name: "phone double",
-                    width: 691,
-                    height: 655
-                }, {
-                    name: "phone single",
-                    width: 345,
-                    height: 746
-                }],
-                url: "https://www.google.de",
-                comparisonUrl: "https://www.google.de",
-            }
-        },
-        current: "default"
-    }
+    return (await getCfg("profiles")) ?? defaultProfile
 }
