@@ -40,6 +40,19 @@ reloadbtn.addEventListener("click", e => {
         w.reloadIgnoringCache()
     })
 })
+const backBtn = document.querySelector<HTMLButtonElement>("#backBtn")
+backBtn.addEventListener("click", e => {
+    document.querySelectorAll<WebViewType>("webview").forEach(w => {
+        try {
+            w.executeJavaScript("history.back()")
+        } catch (e) {
+
+        }
+    })
+})
+
+
+
 
 document.body.style.setProperty("--viewscaling", `${scale}`)
 const viewscalingCheck = document.querySelector<HTMLInputElement>(".viewascaling");

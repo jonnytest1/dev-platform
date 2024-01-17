@@ -21,7 +21,6 @@ a click on for example "login" weill open the login dialog symultaniously in all
 
 ## TODO:
 
-- back button
 - in-app profile editor
 - tampermonkey extension equivalent
 - (recommendations welcome)
