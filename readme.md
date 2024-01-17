@@ -18,3 +18,10 @@
 a click on for example "login" weill open the login dialog symultaniously in all subframes
 
 ![Alt text](image.png)
+
+## TODO:
+
+- back button
+- in-app profile editor
+- tampermonkey extension equivalent
+- (recommendations welcome)
