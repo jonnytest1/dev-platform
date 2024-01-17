@@ -5,11 +5,16 @@ import { registerWindowPrompt } from './prompt/window-prompt';
 import { registerFormHandler } from './form';
 import { getCfg, setCfg } from './util/data';
 import { registerProfileMenu } from './handlers/profile';
+import { enterMAxMAxScreenLAyout, getScreenLayout } from './util/screens';
+import { getProps, mergeProps } from './util/props';
+
+
+
 
 app.whenReady().then(async () => {
     const mainWindow = new BrowserWindow({
 
-        title: "DevTool",
+        title: "DevTool", titleBarStyle: 'customButtonsOnHover',
 
         webPreferences: {
             preload: join(__dirname, "../dist/preload/control-preload.js"),
@@ -25,6 +30,33 @@ app.whenReady().then(async () => {
     mainWindow.on('close', function (event) {
         app.quit();
     });
+
+
+    getProps().then(p => {
+        if (p.useSpanMaxScreen) {
+
+            enterMAxMAxScreenLAyout(mainWindow)
+        }
+    })
+
+
+    const appMenu = Menu.getApplicationMenu()
+    const maxMaximize = new MenuItem({
+        label: "Maxmimize over screens",
+        click: () => {
+            mergeProps({ useSpanMaxScreen: true })
+            enterMAxMAxScreenLAyout(mainWindow)
+
+            // mainWindow.setPosition(-1920, 0)
+        }
+    })
+
+    appMenu?.items
+        .find(item => item.label == "Window")
+        ?.submenu
+        ?.append(maxMaximize)
+
+    //appMenu?.getMenuItemById()
 
     const fc = registerFrameCentral(mainWindow)
     registerWindowPrompt()

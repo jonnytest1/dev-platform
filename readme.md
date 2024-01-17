@@ -25,3 +25,4 @@ a click on for example "login" weill open the login dialog symultaniously in all
 - in-app profile editor
 - tampermonkey extension equivalent
 - (recommendations welcome)
+- maximize over multiple monitors 🤔
