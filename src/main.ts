@@ -7,6 +7,7 @@ import { getCfg, setCfg } from './util/data';
 import { registerProfileMenu } from './handlers/profile';
 import { enterMAxMAxScreenLAyout, getScreenLayout } from './util/screens';
 import { getProps, mergeProps } from './util/props';
+import { registerLoggingForwarder } from './handlers/logging';
 
 
 
@@ -62,7 +63,7 @@ app.whenReady().then(async () => {
     registerWindowPrompt()
     registerFormHandler()
     registerProfileMenu(mainWindow, fc)
-
+    registerLoggingForwarder()
 })
 
 app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {

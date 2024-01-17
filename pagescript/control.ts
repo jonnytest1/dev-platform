@@ -1,7 +1,8 @@
 import { execution } from './dom-ready-execution.js';
 import { cloneNode, reset } from './template-framework.js'
-import { WebContents } from 'electron';
+import { WebContents, ipcRenderer } from 'electron';
 import type { Profile } from '../preload/cross-ready/types/profile.ts';
+import * as e from 'express';
 
 type WebViewType = WebContents & HTMLElement
 
@@ -90,7 +91,8 @@ function renderWebviews(cfg: Profile) {
 
     let parent = document.querySelector<HTMLElement>(".frame-grid")
 
-    for (const display of cfg.displays) {
+    for (let displayIndex = 0; displayIndex < cfg.displays.length; displayIndex++) {
+        const display = cfg.displays[displayIndex]
         let newParent = parent
         if (true || display.name.startsWith("phone")) {
             const subPArent = document.createElement("div")
@@ -145,6 +147,20 @@ function renderWebviews(cfg: Profile) {
         }
         setProps(newNode)
         newNode.webview.style.border = "4px solid green"
+        newNode.webview.addEventListener("did-navigate", (e: (Event & { url: string })) => {
+            newNode.rootEl.querySelector(".url").textContent = e.url
+            postMessage(JSON.stringify({
+                type: "log-forwarder",
+                data: {
+                    message: `webview navigation`,
+                    args: {
+                        webview: `${displayIndex}`,
+                        screen: "main",
+                        url: e.url
+                    }
+                }
+            }), "*")
+        })
 
         setTimeout(() => {
             //  newNode.webview.openDevTools()
@@ -164,7 +180,9 @@ function renderWebviews(cfg: Profile) {
             }, {
                 insertParent: newParent
             })
-
+            newNodeVertical.webview.addEventListener("did-navigate", (e: (Event & { url: string })) => {
+                newNodeVertical.rootEl.querySelector(".url").textContent = e.url
+            })
             setProps(newNodeVertical)
             newNodeVertical.rootEl.classList.add("mirror-vertical", "mirror")
 
@@ -188,7 +206,9 @@ function renderWebviews(cfg: Profile) {
             setProps(newNodeHorizontal)
             newNodeHorizontal.rootEl.classList.add("mirror-horizontal", "mirror")
 
-
+            newNodeHorizontal.webview.addEventListener("did-navigate", (e: (Event & { url: string })) => {
+                newNodeHorizontal.rootEl.querySelector(".url").textContent = e.url
+            })
 
             const diff = cloneNode<Ids>(".view", {
                 url: cfg.comparisonUrl,
@@ -204,6 +224,8 @@ function renderWebviews(cfg: Profile) {
             }, {
                 insertParent: newParent
             })
+
+            setProps(diff)
             diff.rootEl.classList.add("diff", "mirror")
             const canvas = document.createElement("canvas")
             const context = canvas.getContext("2d", { willReadFrequently: true })

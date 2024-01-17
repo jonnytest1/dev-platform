@@ -19,6 +19,8 @@ addEventListener("message", e => {
         const port = e.ports[0]
 
         ipcRenderer.postMessage("init-control-script", "data", [port])
+    } else if (evt.type == "log-forwarder") {
+        ipcRenderer.postMessage("log-forwarder", evt.data)
     }
 
 })
