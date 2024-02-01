@@ -1,4 +1,4 @@
-import { BrowserWindow, Debugger, MessagePortMain, ipcMain } from 'electron';
+import { BrowserWindow, Debugger, MessagePortMain, ipcMain, webContents } from 'electron';
 import CDP from "chrome-remote-interface"
 import { Protocol } from "devtools-protocol"
 import { Frame } from './frame';
@@ -65,6 +65,14 @@ export class FrameCentral {
             this.sendToAll("removemousemirror", { type: "removemousemirror" })
         } else if (evt.type == "enable-mouse-mirror") {
             Frame.mouseMirrorEnabled = true
+        } else if (evt.type == "enable-mobile-emulation") {
+            const id = evt.webcontents
+
+            webContents.fromId(id)?.debugger.sendCommand('Emulation.setEmitTouchEventsForMouse', { enabled: true })
+            webContents.fromId(id)?.debugger.sendCommand('Emulation.setTouchEmulationEnabled', {
+                enabled: true,
+                configuration: 'mobile',
+            });
         }
     }
 }

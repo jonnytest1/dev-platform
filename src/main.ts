@@ -3,7 +3,6 @@ import { join } from 'path';
 import { registerFrameCentral } from './frame-central';
 import { registerWindowPrompt } from './prompt/window-prompt';
 import { registerFormHandler } from './form';
-import { getCfg, setCfg } from './util/data';
 import { registerProfileMenu } from './handlers/profile';
 import { enterMAxMAxScreenLAyout, getScreenLayout } from './util/screens';
 import { getProps, mergeProps } from './util/props';
