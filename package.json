@@ -8,7 +8,7 @@
     "build-scss": "node_modules\\.bin\\sass --load-path=node_modules/ .\\pagescript\\index.scss dist\\index.css",
     "watch-scss": "node_modules\\.bin\\sass  --watch --load-path=node_modules/ .\\pagescript\\index.scss dist\\index.css",
     "start-electron": "cd ./src && electron --inspect=15858 -r ts-node/register ./main.ts",
-    "start": "npm run-script build-scss && npm run build-pagescript && npm run start-electron"
+    "start": "npm run-script build-scss && npm run build-preload && npm run build-pagescript && npm run start-electron"
   },
   "dependencies": {
     "chrome-remote-interface": "^0.33.0",
