@@ -1,4 +1,4 @@
-type BindingTypes<T> = string | number | ((event: Event, ctx: T) => void) | HTMLElement
+type BindingTypes<T> = string | boolean | number | ((event: Event, ctx: T) => void) | HTMLElement
 
 function insertElement<T>(el: HTMLElement, props: Record<string, BindingTypes<T>>, ids: Record<string, HTMLElement>) {
     let newel: HTMLElement & { partition?: string } = el;

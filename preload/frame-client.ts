@@ -7,6 +7,8 @@ import { CentralToClientEvent } from './client-event'
 import { ClientToCentralEvents, ClientToCentralEventsMap } from './client-to-server-events'
 import { elementFromMappedSelectors, selectorFromElement } from './element-selector'
 import { sendMessage, setHandler } from './cross-ready/communication'
+import { readFileSync, readdirSync } from 'fs'
+import { join } from 'path'
 console.log("frame-client")
 
 const channel = new MessageChannel()
@@ -219,3 +221,17 @@ addEventListener("message", e => {
 })
 
 
+try {
+    const scriptDir = join(__dirname, "pagescripting")
+    const files = readdirSync(scriptDir, { withFileTypes: true, encoding: "utf8" })
+    for (const file of files) {
+        if (file.name.endsWith(".map")) {
+            continue
+        }
+        const filePath = join(scriptDir, file.name)
+        const fileContent = readFileSync(filePath, { encoding: "utf8" })
+        eval(fileContent)
+    }
+} catch (e) {
+    debugger
+}
