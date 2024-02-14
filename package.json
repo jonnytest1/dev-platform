@@ -1,4 +1,10 @@
 {
+  "name": "devplatform",
+  "version": "1.0.0",
+  "author": {
+    "name": "Jonathan Heindl"
+  },
+  "main": "./dist/src/src/main.js",
   "scripts": {
     "watch": "concurrently --kill-others \"npm run watch-preload\" \"npm run watch-pagescript\" \"npm run-script watch-scss\" &  ",
     "build-pagescript": "cd pagescript && tsc",
@@ -8,17 +14,20 @@
     "build-scss": "node_modules\\.bin\\sass --load-path=node_modules/ .\\pagescript\\index.scss dist\\index.css",
     "watch-scss": "node_modules\\.bin\\sass  --watch --load-path=node_modules/ .\\pagescript\\index.scss dist\\index.css",
     "start-electron": "cd ./src && electron --inspect=15858 -r ts-node/register ./main.ts",
-    "start": "npm run-script build-scss && npm run build-preload && npm run build-pagescript && npm run start-electron"
+    "start": "npm run-script build-scss && npm run build-preload && npm run build-pagescript && npm run start-electron",
+    "pack": "cd src && tsc && cd .. && electron-builder -w",
+    "dist": "electron-builder"
   },
   "dependencies": {
     "chrome-remote-interface": "^0.33.0",
     "concurrently": "^8.2.2",
-    "electron": "^27.0.4",
     "express": "^4.18.2",
     "express-ws": "^5.0.2",
     "sass": "^1.69.5"
   },
   "devDependencies": {
+    "electron": "^27.0.4",
+    "electron-builder": "^24.9.1",
     "@types/chrome-remote-interface": "^0.31.13",
     "@types/express": "^4.17.21",
     "@types/node": "^20.9.0",
@@ -26,5 +35,17 @@
     "dotenv": "^16.3.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
+  },
+  "build": {
+    "appId": "jonathan.dev.platform",
+    "win": {
+      "target": "nsis"
+    },
+    "files": [
+      "dist/src/**/*",
+      "dist/index.css",
+      "dist/pagescript/**/*",
+      "dist/preload/**/*"
+    ]
   }
 }

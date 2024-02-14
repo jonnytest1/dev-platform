@@ -146,10 +146,10 @@ function renderWebviews(cfg: Profile) {
                 frame.webview.executeJavaScript(`(${execution.toString()})()`)
 
                 if (display.mobile) {
-                    msgChannel.port2.postMessage(JSON.stringify({
-                        type: "enable-mobile-emulation",
-                        webcontents: frame.webview.getWebContentsId()
-                    }))
+                    /* msgChannel.port2.postMessage(JSON.stringify({
+                         type: "enable-mobile-emulation",
+                         webcontents: frame.webview.getWebContentsId()
+                     }))*/
                 }
             })
 
@@ -247,13 +247,23 @@ function renderWebviews(cfg: Profile) {
                 while (diffing) {
                     try {
                         const [mainI, compareI] = await Promise.all([
-                            newNode.webview.capturePage(),
-                            newNodeHorizontal.webview.capturePage()
+                            newNode.webview.capturePage({
+                                x: 0,
+                                y: 0,
+                                height: display.height,
+                                width: display.width
+                            }),
+                            newNodeHorizontal.webview.capturePage({
+                                x: 0,
+                                y: 0,
+                                height: display.height,
+                                width: display.width
+                            })
                         ])
 
-                        const scaleSize = mainI.getSize(scale);
-                        canvas.width = scaleSize.width
-                        canvas.height = scaleSize.height
+                        const scaleSize = diff.wrapper.getBoundingClientRect()
+                        canvas.width = display.width
+                        canvas.height = display.height
 
 
                         const imageData = context.getImageData(0, 0, canvas.width, canvas.height)
