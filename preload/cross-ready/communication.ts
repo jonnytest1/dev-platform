@@ -12,6 +12,8 @@ interface ResponseMap {
     promptWindow: {
         [key: string]: string
     }
+
+    scriptContent: string | undefined
 }
 
 type ResponseType<T> = T extends keyof ResponseMap ? ResponseMap[T] : void
@@ -28,6 +30,10 @@ interface ParameterMap {
 
     formdata: {
         action: string
+    }
+
+    scriptContent: {
+        src: string
     }
 
     asdf: any

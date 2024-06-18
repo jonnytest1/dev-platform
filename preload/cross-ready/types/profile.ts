@@ -7,4 +7,6 @@ export interface Profile {
     displays: Array<Display>
     url: string,
     comparisonUrl: string
+
+    uniqueSessions?: boolean
 }

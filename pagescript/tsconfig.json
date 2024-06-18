@@ -8,11 +8,13 @@
         "outDir": "../dist/pagescript",
         "moduleResolution": "node",
         "downlevelIteration": true,
+        "target": "ES2022",
         "paths": {},
         "lib": [
             "DOM.Iterable",
             "DOM",
-            "ESNext"
+            "ESNext",
+            "ES2015.Promise"
         ]
     },
     /*"files": [

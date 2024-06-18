@@ -7,9 +7,8 @@ import { registerProfileMenu } from './handlers/profile';
 import { enterMAxMAxScreenLAyout, getScreenLayout } from './util/screens';
 import { getProps, mergeProps } from './util/props';
 import { registerLoggingForwarder } from './handlers/logging';
-
-
-
+import { writeFileSync } from 'fs';
+import { regsiterScriptHandler } from './handlers/script';
 
 app.whenReady().then(async () => {
     const mainWindow = new BrowserWindow({
@@ -63,6 +62,9 @@ app.whenReady().then(async () => {
     registerFormHandler()
     registerProfileMenu(mainWindow, fc)
     registerLoggingForwarder()
+    regsiterScriptHandler()
+
+
 })
 
 app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {

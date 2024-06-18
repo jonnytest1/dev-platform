@@ -6,7 +6,7 @@ import { quantifyPosition } from './grid-iterator'
 import { CentralToClientEvent } from './client-event'
 import { ClientToCentralEvents, ClientToCentralEventsMap } from './client-to-server-events'
 import { elementFromMappedSelectors, selectorFromElement } from './element-selector'
-import { sendMessage, setHandler } from './cross-ready/communication'
+import { sendMessage } from './cross-ready/communication'
 import { readFileSync, readdirSync } from 'fs'
 import { join } from 'path'
 import { execute } from './pagescripting/lib'
@@ -24,6 +24,8 @@ if (!location.href.includes("{{url}}")) {
 function send<T extends keyof ClientToCentralEventsMap>(data: ClientToCentralEventsMap[T]) {
     channel.port2.postMessage(JSON.stringify(data))
 }
+
+
 
 
 let lastSend = 0
@@ -208,7 +210,6 @@ addEventListener("message", e => {
                 const form = document.querySelector(`form[action*="${evt.data.action}"]`)
                 for (const prop in response.props) {
                     const input = form?.querySelector(`#${prop}`)
-                    debugger
                     if (input && input instanceof HTMLInputElement) {
                         input.value = response.props[prop] as string
                         input.focus()
