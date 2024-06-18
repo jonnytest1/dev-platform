@@ -7,6 +7,7 @@ import { addToLog } from './util/logging'
 export class Frame {
 
     static mouseMirrorEnabled = true
+    static syncEnabled = true
 
     channel: MessagePortMain
     debugger: Omit<Electron.Debugger, "sendCommand"> & {
@@ -22,7 +23,7 @@ export class Frame {
 
     frameId: string
 
-    documentInterval
+    documentInterval: NodeJS.Timeout | null = null
 
     constructor(e: IpcMainEvent) {
         this.channel = e.ports[0]
@@ -73,7 +74,10 @@ export class Frame {
     }
 
     cleanup() {
-        clearInterval(this.documentInterval)
+        if (this.documentInterval) {
+            clearInterval(this.documentInterval)
+            this.documentInterval = null
+        }
     }
 
 
@@ -92,17 +96,24 @@ export class Frame {
                 const evt = JSON.parse(e.data) as ClientToCentralEvents;
                 console.log("event with type " + evt.type)
                 if (evt.type == "mousemove") {
-                    if (Frame.mouseMirrorEnabled) {
+                    if (Frame.mouseMirrorEnabled && Frame.syncEnabled) {
                         await this.handleMouseMoveEvent(evt, eventEmitter)
                     }
                 } else if (evt.type == "click") {
-                    await this.handleClickEvent(evt, eventEmitter)
+                    addToLog(`clickevent`, { selector: evt.selectors, position: evt.data })
+                    if (Frame.syncEnabled) {
+                        await this.handleClickEvent(evt, eventEmitter)
+                    }
                 } else if (evt.type == "input") {
                     addToLog(`inputevent`, { selector: evt.selectors, text: evt.text })
-                    eventEmitter.sendToOthers(this, "input", evt)
+                    if (Frame.syncEnabled) {
+                        eventEmitter.sendToOthers(this, "input", evt)
+                    }
                 } else if (evt.type == "scroll") {
                     addToLog(`scrollevent`, { scrollTargetSelectors: evt.selectors, offset: evt.offset })
-                    eventEmitter.sendToOthers(this, "scroll", evt)
+                    if (Frame.syncEnabled) {
+                        eventEmitter.sendToOthers(this, "scroll", evt)
+                    }
                 }
             } catch (e) {
                 console.log(e)
@@ -123,8 +134,8 @@ export class Frame {
     }
 
     private async handleClickEvent(evt: ClickEvt, eventEmitter: import("./frame-central").FrameCentral) {
+
         eventEmitter.sendToOthers(this, "click", evt)
-        addToLog(`clickevent`, { selector: evt.selectors, position: evt.data })
         const highlightSelector = evt.selectors.map(s => s.queryStr).join(" ")
         eventEmitter.window.webContents.send('focusupdate', highlightSelector)
         if (evt.selectors.length) {

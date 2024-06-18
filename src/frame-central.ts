@@ -1,6 +1,4 @@
 import { BrowserWindow, Debugger, MessagePortMain, ipcMain, webContents } from 'electron';
-import CDP from "chrome-remote-interface"
-import { Protocol } from "devtools-protocol"
 import { Frame } from './frame';
 import { CentralToClientEvent } from "../preload/client-event"
 
@@ -19,7 +17,7 @@ export class FrameCentral {
                 }
                 this.frameMap[newFrame.frameId] = newFrame
 
-                e.sender.addListener("destroyed", e => {
+                e.sender.addListener("destroyed", () => {
                     newFrame.cleanup()
                     delete this.frameMap[newFrame.frameId]
                 })
@@ -65,14 +63,18 @@ export class FrameCentral {
             this.sendToAll("removemousemirror", { type: "removemousemirror" })
         } else if (evt.type == "enable-mouse-mirror") {
             Frame.mouseMirrorEnabled = true
+        } else if (evt.type == "enable-sync") {
+            Frame.syncEnabled = true
+        } else if (evt.type == "disable-sync") {
+            Frame.syncEnabled = false
         } else if (evt.type == "enable-mobile-emulation") {
             const id = evt.webcontents
 
-            webContents.fromId(id)?.debugger.sendCommand('Emulation.setEmitTouchEventsForMouse', { enabled: true })
-            webContents.fromId(id)?.debugger.sendCommand('Emulation.setTouchEmulationEnabled', {
-                enabled: true,
-                configuration: 'mobile',
-            });
+            /* webContents.fromId(id)?.debugger.sendCommand('Emulation.setEmitTouchEventsForMouse', { enabled: true })
+             webContents.fromId(id)?.debugger.sendCommand('Emulation.setTouchEmulationEnabled', {
+                 enabled: true,
+                 configuration: 'mobile',
+             });*/
         }
     }
 }

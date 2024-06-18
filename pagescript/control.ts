@@ -16,6 +16,9 @@ msgChannel.port2.addEventListener("message", e => {
     if (evt.type == "profile") {
         profileData = evt.data
         renderWebviews(evt.data)
+        msgChannel.port2.postMessage(JSON.stringify({
+            type: "enable-sync"
+        }))
     }
 })
 
@@ -84,7 +87,18 @@ mousemirrorInpt.addEventListener("change", e => {
         }))
     }
 })
-
+const syncInpt = document.querySelector<HTMLInputElement>("#sync")
+syncInpt.addEventListener("change", e => {
+    if (syncInpt.checked) {
+        msgChannel.port2.postMessage(JSON.stringify({
+            type: "enable-sync"
+        }))
+    } else {
+        msgChannel.port2.postMessage(JSON.stringify({
+            type: "disable-sync"
+        }))
+    }
+})
 function renderWebviews(cfg: Profile) {
     reset(".frame-grid")
 
