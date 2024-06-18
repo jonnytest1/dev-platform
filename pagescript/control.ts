@@ -127,6 +127,7 @@ function renderWebviews(cfg: Profile) {
             ...display,
             height: display.height + "",
             width: display.width + "",
+            partition: `main${displayIndex}`,
             inspectclick: () => {
                 newNode.webview.openDevTools()
             },
@@ -196,6 +197,7 @@ function renderWebviews(cfg: Profile) {
                 ...display,
                 height: display.height + "",
                 width: display.width + "",
+                partition: `mirror${displayIndex}`,
                 inspectclick: () => {
                     newNodeVertical.webview.openDevTools()
                 },
@@ -219,6 +221,7 @@ function renderWebviews(cfg: Profile) {
                 ...display,
                 height: display.height + "",
                 width: display.width + "",
+                partition: `mirror${displayIndex}`,
                 inspectclick: () => {
                     newNodeHorizontal.webview.openDevTools()
                 },

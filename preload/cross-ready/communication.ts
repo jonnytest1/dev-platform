@@ -5,7 +5,9 @@ import { UrlMatch } from './url-matcher';
 import { FormProps } from './types/form';
 
 interface ResponseMap {
-    formdata: FormProps | "never"
+    formdata: FormProps
+    | "never"  // dont store
+    | undefined // not set 
 
     promptWindow: {
         [key: string]: string

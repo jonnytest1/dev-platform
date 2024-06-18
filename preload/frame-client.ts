@@ -9,6 +9,7 @@ import { elementFromMappedSelectors, selectorFromElement } from './element-selec
 import { sendMessage, setHandler } from './cross-ready/communication'
 import { readFileSync, readdirSync } from 'fs'
 import { join } from 'path'
+import { execute } from './pagescripting/lib'
 console.log("frame-client")
 
 const channel = new MessageChannel()
@@ -19,11 +20,6 @@ if (!location.href.includes("{{url}}")) {
         type: "init"
     }, [channel.port1])
 }
-
-
-
-
-
 
 function send<T extends keyof ClientToCentralEventsMap>(data: ClientToCentralEventsMap[T]) {
     channel.port2.postMessage(JSON.stringify(data))
@@ -203,10 +199,13 @@ addEventListener("message", e => {
     } else if (evt.type == "formdata") {
         sendMessage({ type: "formdata", data: { action: evt.data.action } })
             .then(response => {
+                if (!response) {
+                    return
+                }
                 if (response === "never") {
                     return
                 }
-                const form = document.querySelector(`form[action*="${response.action}"]`)
+                const form = document.querySelector(`form[action*="${evt.data.action}"]`)
                 for (const prop in response.props) {
                     const input = form?.querySelector(`#${prop}`)
                     debugger
@@ -228,9 +227,17 @@ try {
         if (file.name.endsWith(".map")) {
             continue
         }
-        const filePath = join(scriptDir, file.name)
-        const fileContent = readFileSync(filePath, { encoding: "utf8" })
-        eval(fileContent)
+        if (file.isDirectory()) {
+            continue;
+        }
+
+        try {
+            const filePath = join(scriptDir, file.name)
+            const fileContent = readFileSync(filePath, { encoding: "utf8" })
+            execute(fileContent)
+        } catch (e) {
+            debugger;
+        }
     }
 } catch (e) {
     debugger
