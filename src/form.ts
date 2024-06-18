@@ -28,7 +28,8 @@ export function registerFormHandler() {
 
         const formCfg = await getCfg("form") ?? {}
         const evtAction = evt.action;
-        if (formCfg[evtAction]) {
+        const originAction = getOriginUrl(evtAction)
+        if (formCfg[evtAction] || formCfg[originAction]) {
             return
         }
         if (pending[evtAction]) {
@@ -48,7 +49,7 @@ export function registerFormHandler() {
         const choice = result.submittype
         let action = evtAction
         if (choice === "yesorigin") {
-            action = getOriginUrl(evtAction)
+            action = originAction
         }
         formCfg[action] = evt
 
