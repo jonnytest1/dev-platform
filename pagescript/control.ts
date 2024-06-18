@@ -1,9 +1,8 @@
 import { execution } from './dom-ready-execution.js';
 import { cloneNode, reset } from './template-framework.js'
 import { WebContents, WebviewTag, ipcRenderer } from 'electron';
-import type { Display, Profile } from '../preload/cross-ready/types/profile.ts';
-import * as e from 'express';
-import { debug } from 'console';
+import type { Display, Profile } from '../preload/cross-ready/types/profile.js';
+
 
 type WebViewType = WebviewTag
 
@@ -127,7 +126,7 @@ function renderWebviews(cfg: Profile) {
             ...display,
             height: display.height + "",
             width: display.width + "",
-            partition: `main${displayIndex}`,
+            partition: `main${cfg.uniqueSessions ? displayIndex : ""}`,
             inspectclick: () => {
                 newNode.webview.openDevTools()
             },
@@ -157,6 +156,8 @@ function renderWebviews(cfg: Profile) {
                 frame.urldisplay.textContent = frame.webview.getURL()
                 frame.ctrl.title = frame.webview.getURL()
             })
+
+
             frame.webview.addEventListener("dom-ready", () => {
                 frame.webview.executeJavaScript(`(${execution.toString()})()`)
 
@@ -197,7 +198,7 @@ function renderWebviews(cfg: Profile) {
                 ...display,
                 height: display.height + "",
                 width: display.width + "",
-                partition: `mirror${displayIndex}`,
+                partition: `mirror${cfg.uniqueSessions ? displayIndex : ""}`,
                 inspectclick: () => {
                     newNodeVertical.webview.openDevTools()
                 },
@@ -221,7 +222,7 @@ function renderWebviews(cfg: Profile) {
                 ...display,
                 height: display.height + "",
                 width: display.width + "",
-                partition: `mirror${displayIndex}`,
+                partition: `mirror${cfg.uniqueSessions ? displayIndex : ""}`,
                 inspectclick: () => {
                     newNodeHorizontal.webview.openDevTools()
                 },
