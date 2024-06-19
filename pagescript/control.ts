@@ -111,7 +111,12 @@ comparisonsIEl.addEventListener("change", e => {
         comparisonsBlocked = false
     } else {
         comparisonsBlocked = true
+
     }
+    const viewScaleCotnainer = document.querySelector<HTMLElement>("#viewscale");
+    viewScaleCotnainer.title = comparisonsBlocked ? "only with comparisons" : ""
+    viewScaleCotnainer.style.color = comparisonsBlocked ? "gray" : "black"
+    viewscalingCheck.disabled = comparisonsBlocked
     renderWebviews(profileData, comparisonsBlocked)
 })
 
