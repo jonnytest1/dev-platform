@@ -9,12 +9,12 @@ type WebViewType = WebviewTag
 const msgChannel = new MessageChannel()
 msgChannel.port1.start()
 msgChannel.port2.start()
-
+let comparisonsBlocked = false
 msgChannel.port2.addEventListener("message", e => {
     const evt = JSON.parse(e.data)
     if (evt.type == "profile") {
         profileData = evt.data
-        renderWebviews(evt.data)
+        renderWebviews(evt.data, comparisonsBlocked)
         msgChannel.port2.postMessage(JSON.stringify({
             type: "enable-sync"
         }))
@@ -70,7 +70,13 @@ viewscalingCheck.addEventListener("change", e => {
 const input = document.querySelector<HTMLInputElement>("#url")
 input.addEventListener("change", e => {
     document.querySelectorAll<WebViewType>("webview").forEach(el => {
+        const webviewUrl = el.getURL();
+        if (!webviewUrl.startsWith("file")) {
+            const newUrl = new URL(input.value, webviewUrl)
 
+            el.loadURL(newUrl.href)
+
+        }
     })
 })
 
@@ -98,7 +104,18 @@ syncInpt.addEventListener("change", e => {
         }))
     }
 })
-function renderWebviews(cfg: Profile) {
+
+const comparisonsIEl = document.querySelector<HTMLInputElement>("#comparisons")
+comparisonsIEl.addEventListener("change", e => {
+    if (comparisonsIEl.checked) {
+        comparisonsBlocked = false
+    } else {
+        comparisonsBlocked = true
+    }
+    renderWebviews(profileData, comparisonsBlocked)
+})
+
+function renderWebviews(cfg: Profile, blockComparisons = false) {
     reset(".frame-grid")
 
     document.body.style.setProperty("--scale", `${scale}`)
@@ -192,7 +209,7 @@ function renderWebviews(cfg: Profile) {
         setTimeout(() => {
             //  newNode.webview.openDevTools()
         }, 100)
-        if (cfg.comparisonUrl) {
+        if (cfg.comparisonUrl && !blockComparisons) {
             const newNodeVertical = cloneNode<Ids>(".view", {
                 url: cfg.comparisonUrl,
                 ...display,
