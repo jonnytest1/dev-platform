@@ -19,6 +19,10 @@ a click on for example "login" weill open the login dialog symultaniously in all
 
 ![Alt text](image.png)
 
+synchronisation example:
+
+![alt text](devplatform.gif)
+
 ## TODO:
 
 - in-app profile editor
